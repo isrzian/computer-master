@@ -1,0 +1,45 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  DEV_DEPLOY_DIR: '/var/www/boilerplatenest12345/www-master'
+  EXCLUDE_DIRS: '.git .idea'
+
+.build:
+  stage: build
+  cache:
+    paths:
+      - node_modules
+  artifacts:
+    paths:
+      - node_modules
+      - dist
+  script:
+    - yarn
+    - yarn build
+    - echo "$CI_COMMIT_REF_NAME-$CI_JOB_ID" > $CI_PROJECT_DIR/dist/version.txt
+
+build_dev:
+  extends: .build
+  only:
+    - master
+
+build_merge_requests:
+  extends: .build
+  only:
+    - merge_requests
+
+deploy_dev:
+  stage: deploy
+  only:
+    - master
+  script:
+    - ssh root@dev "mkdir -p $DEV_DEPLOY_DIR"
+    - printf "%s\n" $EXCLUDE_DIRS > ../.rsync-exclude
+      && rsync -rzak --delete --exclude-from=../.rsync-exclude $CI_PROJECT_DIR/ root@dev:$DEV_DEPLOY_DIR
+    - ssh root@dev "cd $DEV_DEPLOY_DIR
+      && ln -sf ../config/.env
+      && ln -s ../files
+      && CLI_PATH=./dist/cli.js bash -c 'npx nestjs-command migrate'
+      && pm2 reload boilerplatenest12345"
