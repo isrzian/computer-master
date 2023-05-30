@@ -1,4 +1,4 @@
-import {forwardRef, Module} from '@nestjs/common';
+import {Module} from '@nestjs/common';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {ModuleHelper} from '@steroidsjs/nest/src/infrastructure/helpers/ModuleHelper';
 import {ClientTable} from './tables/ClientTable';
@@ -10,6 +10,7 @@ import {ClientService} from '../domain/services/ClientService';
     imports: [
         TypeOrmModule.forFeature([ClientTable]),
     ],
+    controllers: ModuleHelper.importDir(__dirname + '/controllers'),
     providers: [
         {
             provide: IClientRepository,

@@ -17,18 +17,26 @@ export class OrderController {
     @Get()
     @ApiQuery({type: OrderSearchDto})
     @ApiOkSearchResponse({type: OrderModel})
-    async get(
+    async getAll(
         @Query() dto: OrderSearchDto,
     ) {
         return this.orderService.search(dto);
     }
 
     @Get('/:id')
-    @ApiOkResponse({type: OrderModel})
-    async getOne(
+    @ApiOkSearchResponse({type: OrderModel})
+    async get(
         @Param('id') id: number,
     ) {
         return this.orderService.findById(id);
+    }
+
+    @Get('/generate/report')
+    @ApiBody({type: OrderModel})
+    async getReport(
+        @Body() data: OrderModel,
+    ) {
+        return this.orderService.getReport(data);
     }
 
     @Post()

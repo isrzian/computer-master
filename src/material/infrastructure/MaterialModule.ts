@@ -1,4 +1,4 @@
-import {forwardRef, Module} from '@nestjs/common';
+import {Module} from '@nestjs/common';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {ModuleHelper} from '@steroidsjs/nest/src/infrastructure/helpers/ModuleHelper';
 import {MaterialTable} from './tables/MaterialTable';
@@ -10,6 +10,7 @@ import {MaterialService} from '../domain/services/MaterialService';
     imports: [
         TypeOrmModule.forFeature([MaterialTable]),
     ],
+    controllers: ModuleHelper.importDir(__dirname + '/controllers'),
     providers: [
         {
             provide: IMaterialRepository,

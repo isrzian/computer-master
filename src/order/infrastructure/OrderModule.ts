@@ -5,10 +5,13 @@ import {OrderTable} from './tables/OrderTable';
 import {IOrderRepository} from '../domain/interfaces/IOrderRepository';
 import {OrderRepository} from './repositories/OrderRepository';
 import {OrderService} from '../domain/services/OrderService';
+import {FileService} from '../../file/domain/services/FileService';
+import {FileModule} from '../../file/infrastructure/FileModule';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([OrderTable]),
+        forwardRef(() => FileModule),
     ],
     controllers: ModuleHelper.importDir(__dirname + '/controllers'),
     providers: [
@@ -18,6 +21,7 @@ import {OrderService} from '../domain/services/OrderService';
         },
         ModuleHelper.provide(OrderService, [
             IOrderRepository,
+            FileService,
         ]),
     ],
     exports: [
