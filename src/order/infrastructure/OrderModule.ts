@@ -10,6 +10,7 @@ import {OrderService} from '../domain/services/OrderService';
     imports: [
         TypeOrmModule.forFeature([OrderTable]),
     ],
+    controllers: ModuleHelper.importDir(__dirname + '/controllers'),
     providers: [
         {
             provide: IOrderRepository,

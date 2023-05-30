@@ -1,4 +1,5 @@
 import {
+    BooleanField,
     CreateTimeField,
     PrimaryKeyField,
     RelationField,
@@ -52,6 +53,11 @@ export class OrderModel {
         relationName: 'client',
     })
     clientId: number;
+
+    @BooleanField({
+        defaultValue: false,
+    })
+    isDone: boolean;
 
     @CreateTimeField({
         label: 'Создан',

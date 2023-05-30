@@ -18,6 +18,9 @@ import {ValidationExceptionFilterCustom} from './base/infrastructure/filters/Val
 import {RequestExecutionExceptionFilter} from './base/infrastructure/filters/RequestExecutionExceptionFilter';
 import {InitModule} from './init/infrastructure/InitModule';
 import {NotifierModule} from './notifier/infrastructure/NotifierModule';
+import {MaterialModule} from './material/infrastructure/MaterialModule';
+import {OrderModule} from './order/infrastructure/OrderModule';
+import {ClientModule} from './client/infrastructure/ClientModule';
 
 @Module({
     imports: [
@@ -46,6 +49,9 @@ import {NotifierModule} from './notifier/infrastructure/NotifierModule';
         AuthModule,
         UserModule,
         NotifierModule,
+        MaterialModule,
+        OrderModule,
+        ClientModule,
     ].filter(Boolean),
     providers: [
         MigrateCommand,
