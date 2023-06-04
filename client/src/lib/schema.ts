@@ -22,18 +22,26 @@ export const order = z.object({
   phoneView: z.string(),
   imei: z.string(),
   materialsIds: z.array(z.number()),
-  materialsInput: z.array(
-    z.object({
-      value: z.number(),
-      label: z.string(),
-    }),
-  ),
+  materialsInput: z
+    .array(
+      z.object({
+        value: z.number(),
+        label: z.string(),
+      }),
+    )
+    .min(1),
   clientId: z.number(),
   clientInput: z.object({
     value: z.number(),
     label: z.string(),
   }),
   isDone: z.boolean().default(false),
+  isDoneInput: z
+    .object({
+      value: z.boolean(),
+      label: z.string(),
+    })
+    .optional(),
 })
 
 export const completeOrder = order.omit({

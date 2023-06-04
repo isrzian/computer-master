@@ -28,6 +28,9 @@ export default function Textarea<FormValues extends FieldValues = FieldValues>({
 
   return (
     <div className="flex flex-col gap-2.5">
+      <label htmlFor={name} className="text-zinc-200">
+        {textareaProps.placeholder}
+      </label>
       <textarea
         {...textareaProps}
         className={clsx(

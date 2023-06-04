@@ -48,8 +48,12 @@ export default function Materials() {
 
   const { mutate, isLoading } = useMutation({
     mutationKey: ['materials/create'],
-    mutationFn: async (data: z.infer<typeof material>) =>
-      server.post('/material', data),
+    mutationFn: async (data: z.infer<typeof material>) => {
+      Promise.allSettled([
+        await server.post(`/material`, data),
+        await new Promise((resolve) => setTimeout(resolve, 600)),
+      ])
+    },
     onSuccess: () => {
       materials.refetch()
       reset({

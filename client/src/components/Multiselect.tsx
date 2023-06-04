@@ -6,18 +6,18 @@ import Select, { Props as SelectProps, GroupBase } from 'react-select'
 interface ControlledSelectProps<
   FormValues extends FieldValues = FieldValues,
   Option extends {
-    value: number
+    value: number | boolean
     label: string
   } = {
-    value: number
+    value: number | boolean
     label: string
   },
   IsMulti extends boolean = boolean,
   Group extends GroupBase<Option> = GroupBase<Option>,
 > extends Omit<SelectProps<Option, IsMulti, Group>, 'name' | 'defaultValue'>,
     UseControllerProps<FormValues> {
-  href: string
-  tooltip: string
+  href?: string
+  tooltip?: string
 }
 
 const controlStyles = {
@@ -33,30 +33,30 @@ const multiValueStyles =
   'bg-zinc-800 text-white border border-zinc-600 rounded-lg items-center py-0.5 pl-2 pr-1 gap-1.5'
 const multiValueLabelStyles = 'leading-6 py-0.5'
 const multiValueRemoveStyles =
-  'border border-zinc-200 bg-white hover:bg-pink-50 hover:text-pink-800 text-zinc-500 hover:border-pink-300 rounded-lg mx-2.5'
+  'border border-zinc-500 bg-white hover:bg-pink-50 hover:text-pink-800 text-zinc-500 hover:border-pink-300 rounded-lg mx-2.5'
 const indicatorsContainerStyles = 'p-1 gap-1'
 const clearIndicatorStyles =
-  'text-zinc-500 p-1 rounded-md hover:bg-red-50 hover:text-pink-800'
+  'text-zinc-200 p-1 rounded-md hover:bg-red-50 hover:text-pink-800'
 const indicatorSeparatorStyles = 'bg-zinc-600'
-const dropdownIndicatorStyles = 'p-1 hover:bg-zinc-800 text-zinc-500 rounded-md'
+const dropdownIndicatorStyles = 'p-1 hover:bg-zinc-800 text-zinc-200 rounded-md'
 const menuStyles =
-  'p-1 mt-2 border border-zinc-600 bg-zinc-700 rounded-lg text-white/50'
-const groupHeadingStyles = 'ml-3 mt-2 mb-1 text-zinc-500 text-sm'
+  'p-1 mt-2 border border-zinc-600 bg-zinc-700 rounded-lg text-zinc-200'
+const groupHeadingStyles = 'ml-3 mt-2 mb-1 text-zinc-200 text-sm'
 const optionStyles = {
   base: 'hover:cursor-pointer px-3 py-2 rounded',
-  focus: 'bg-zinc-800 active:bg-zinc-200',
+  focus: 'bg-zinc-800 active:bg-zinc-600',
   selected: "after:content-['✔'] after:ml-2 after:text-green-500 text-zinc-300",
 }
 const noOptionsMessageStyles =
-  'text-zinc-600 p-2 bg-zinc-700 border border-dashed border-zinc-600 rounded-sm'
+  'text-zinc-200 p-2 bg-zinc-700 border border-dashed border-zinc-600 rounded-sm'
 
 function Multiselect<
   FormValues extends FieldValues = FieldValues,
   Option extends {
-    value: number
+    value: number | boolean
     label: string
   } = {
-    value: number
+    value: number | boolean
     label: string
   },
   IsMulti extends boolean = boolean,
@@ -82,6 +82,9 @@ function Multiselect<
   })
   return (
     <div className="flex flex-col gap-2.5">
+      <label htmlFor={name} className="text-zinc-200">
+        {selectProps.placeholder}
+      </label>
       <Select
         {...selectProps}
         defaultValue={field.value ?? undefined}
@@ -136,6 +139,7 @@ function Multiselect<
           noOptionsMessage: () => noOptionsMessageStyles,
         }}
       />
+      {!!error && <span className="italic text-red-500">{error.message}</span>}
       {href && (
         <NavLink
           to={href}
@@ -144,7 +148,6 @@ function Multiselect<
           {tooltip}
         </NavLink>
       )}
-      {!!error && <span className="italic text-red-500">{error.message}</span>}
     </div>
   )
 }

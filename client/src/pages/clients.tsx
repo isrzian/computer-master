@@ -48,8 +48,12 @@ export default function Clients() {
 
   const { mutate, isLoading } = useMutation({
     mutationKey: ['clients/create'],
-    mutationFn: async (data: z.infer<typeof client>) =>
-      server.post('/client', data),
+    mutationFn: async (data: z.infer<typeof client>) => {
+      Promise.allSettled([
+        await server.post(`/client`, data),
+        await new Promise((resolve) => setTimeout(resolve, 600)),
+      ])
+    },
     onSuccess: () => {
       clients.refetch()
       reset({})

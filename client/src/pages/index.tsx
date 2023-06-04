@@ -40,7 +40,7 @@ export default function Orders() {
   })
 
   const clients = useQuery({
-    queryKey: ['clients/transformed', pageSize, page],
+    queryKey: ['clients/transformed'],
     queryFn: () =>
       getRecords<z.infer<typeof client>>({
         pathname: '/client',
@@ -56,7 +56,7 @@ export default function Orders() {
   })
 
   const materials = useQuery({
-    queryKey: ['materials/transformed', pageSize, page],
+    queryKey: ['materials/transformed'],
     queryFn: () =>
       getRecords<z.infer<typeof material>>({
         pathname: '/material',
@@ -86,8 +86,12 @@ export default function Orders() {
 
   const { mutate, isLoading } = useMutation({
     mutationKey: ['orders/create'],
-    mutationFn: async (data: z.infer<typeof order>) =>
-      server.post('/order', data),
+    mutationFn: async (data: z.infer<typeof order>) => {
+      Promise.allSettled([
+        await server.post(`/order`, data),
+        await new Promise((resolve) => setTimeout(resolve, 600)),
+      ])
+    },
     onSuccess: () => {
       orders.refetch()
       reset({})
