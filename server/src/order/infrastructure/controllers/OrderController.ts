@@ -5,6 +5,7 @@ import {OrderService} from '../../domain/services/OrderService';
 import {OrderSearchDto} from '../../domain/dtos/OrderSearchDto';
 import {OrderModel} from '../../domain/models/OrderModel';
 import {OrderSaveDto} from '../../domain/dtos/OrderSaveDto';
+import * as path from 'path';
 
 @ApiTags('Заказы')
 @Controller('/order')
@@ -31,12 +32,13 @@ export class OrderController {
         return this.orderService.findById(id);
     }
 
-    @Get('/generate/report')
+    @Get('/:id/report')
     @ApiBody({type: OrderModel})
     async getReport(
-        @Body() data: OrderModel,
-    ) {
-        return this.orderService.getReport(data);
+        @Param('id') id: number,
+    ): Promise<string> {
+        const file = await this.orderService.getReport(id);
+        return path.join(path.resolve(__dirname, '../../../../../'), file.url);
     }
 
     @Post()

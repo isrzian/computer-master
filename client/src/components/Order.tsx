@@ -17,6 +17,7 @@ import Multiselect from './Multiselect'
 import Input from './Input'
 import Textarea from './Textarea'
 import { status } from '../lib/status'
+import {openFileLink} from '../lib/fileLink.ts';
 
 export default function Order({
   id,
@@ -183,11 +184,12 @@ const Content = ({
   const report = useMutation({
     mutationKey: [`order/${id}/report`],
     mutationFn: async () => {
-      Promise.allSettled([
-        await server.get(`/order/generate/report`),
-        await new Promise((resolve) => setTimeout(resolve, 600)),
-      ])
+      return server.get(`/order/${id}/report`)
     },
+    onSuccess: (res: any) => {
+      const {data: fileLink} = res;
+      openFileLink(fileLink);
+    }
   })
 
   return (
@@ -197,7 +199,7 @@ const Content = ({
           <div className="flex flex-row items-baseline justify-between">
             <span className="text-xs text-zinc-500">Номер заказа {id}</span>
             <button
-              onClick={() => report.mutate()}
+              onClick={() => report.mutate(id)}
               className="w-fit text-zinc-500 outline-none transition-colors hover:text-zinc-200"
             >
               <FaRegFilePdf />

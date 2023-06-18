@@ -22,12 +22,14 @@ export class OrderService extends CrudService<OrderModel,
         super();
     }
 
-    async getReport(data: OrderModel) {
+    async getReport(id: number) {
         const template = new OrderTemplate();
 
-        const content = await template.generate(data);
+        const order = await this.createQuery().with('client').where({id}).one();
 
-        const fileName = `Заказ-${data.id}.pdf`;
+        const content = await template.generate(order);
+
+        const fileName = `Заказ-${id}.pdf`;
 
         return this.saveFile(fileName, content);
     }
